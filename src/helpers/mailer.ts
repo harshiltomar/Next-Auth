@@ -9,13 +9,13 @@ export const sendEmail = async ({ email, emailType, userId }: any) => {
 
     if (emailType === "VERIFY") {
       // For 1 hour
-      await User.findByIdandUpdate(userId, {
+      await User.findByIdAndUpdate(userId, {
         verifyToken: hashedToken,
         verifyTokenExpiry: Date.now() + 3600000,
       });
     } else if (emailType === "RESET") {
       // For 1 hour
-      await User.findByIdandUpdate(userId, {
+      await User.findByIdAndUpdate(userId, {
         forgotPasswordToken: hashedToken,
         forgotPasswordTokenExpiry: Date.now() + 3600000,
       });

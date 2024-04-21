@@ -6,18 +6,18 @@ import { sendEmail } from "@/helpers/mailer";
 
 connect();
 
-//ROUTE: /api/users/signup
+// ROUTE: /api/users/signup
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
     const { username, email, password } = reqBody;
 
-    //TODO: Validation
+    // TODO: Validation
     console.log(reqBody);
 
-    await User.findOne({ email });
+    const user = await User.findOne({ email });
 
-    if (User) {
+    if (user) {
       return NextResponse.json(
         { error: "User already exists" },
         { status: 400 }
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     const savedUser = await newUser.save();
     console.log(savedUser);
 
-    //SEND VERIFICATION EMAIL
+    // SEND VERIFICATION EMAIL
     await sendEmail({ email, emailType: "VERIFY", userId: savedUser._id });
 
     return NextResponse.json({
@@ -48,5 +48,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
-
-//51.58

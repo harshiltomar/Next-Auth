@@ -7,17 +7,23 @@ export const sendEmail = async ({ email, emailType, userId }: any) => {
     //TODO: configure mail for usage
     const hashedToken = await bcryptjs.hash(userId.toString(), 10);
 
+    console.log("Mailed to", userId);
+
     if (emailType === "VERIFY") {
       // For 1 hour
-      await User.findByIdAndUpdate(userId, {
-        verifyToken: hashedToken,
-        verifyTokenExpiry: Date.now() + 3600000,
+      const updatedUser = await User.findByIdAndUpdate(userId, {
+        $set: {
+          verifyToken: hashedToken,
+          verifyTokenExpiry: new Date(Date.now() + 3600000), // Expiry 1 hour from now
+        },
       });
     } else if (emailType === "RESET") {
       // For 1 hour
       await User.findByIdAndUpdate(userId, {
-        forgotPasswordToken: hashedToken,
-        forgotPasswordTokenExpiry: Date.now() + 3600000,
+        $set: {
+          forgotPasswordToken: hashedToken,
+          forgotPasswordTokenExpiry: new Date(Date.now() + 3600000),
+        },
       });
     }
 
